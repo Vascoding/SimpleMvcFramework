@@ -14,7 +14,7 @@
         {
             this.users = new UserService();
         }
-       
+
         public IActionResult Register()
         {
             return this.View();
@@ -31,7 +31,8 @@
             var created = this.users.Create(model.Email, model.FullName, model.Password);
             if (created)
             {
-                return this.Redirect(@"/account/login");
+                this.SignIn(model.Email);
+                return this.Redirect("/");
             }
             this.ShowError("Sorry there is allready user with the same email address!");
             return this.Register();
@@ -48,7 +49,7 @@
             var exists = this.users.Exists(model.Email, model.Password);
             if (exists)
             {
-                 this.SignIn(model.Email);
+                this.SignIn(model.Email);
                 return this.Redirect(@"/");
             }
             this.ShowError("Username or password not valid!");
