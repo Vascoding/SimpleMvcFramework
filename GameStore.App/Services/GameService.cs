@@ -7,7 +7,6 @@
     using GameStore.App.Data.Models;
     using GameStore.App.Models;
     using GameStore.App.Services.Contracts;
-    using Microsoft.EntityFrameworkCore.Extensions.Internal;
 
     public class GameService : IGameService
     {

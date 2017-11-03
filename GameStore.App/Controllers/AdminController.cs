@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using GameStore.App.Infrastructure.Common;
     using GameStore.App.Models;
     using GameStore.App.Services;
     using GameStore.App.Services.Contracts;
@@ -10,6 +11,8 @@
 
     public class AdminController : BaseController
     {
+        private const string AdminListGames = "/admin/all";
+
         private readonly IGameService games;
 
         public AdminController()
@@ -24,22 +27,12 @@
                 var allGames = this.games.All();
 
                 var gamesAsHtml = allGames
-                    .Select(g => $@"<tr class=""table-warning"">
-                    <th scope = ""row"">1</ th>
-                    <td>{g.Title}</ td>
-                    <td>{g.Size} GB </ td>
-                    <td>{g.Price} &euro;</ td>
-                    <td>
-                    <a href = ""#"" class=""btn btn-warning btn-sm"" > Edit</a>
-                    <a href = ""#"" class=""btn btn-danger btn-sm"" > Delete</a>
-                    </td>
-                    </tr>
-                    <tr>");
+                    .Select(g => HtmlHelper.AdminAllGamesAsString(g.Title, g.Size, g.Price));
 
                 this.ViewModel["games"] = string.Join(Environment.NewLine, gamesAsHtml);
                 return this.View();
             }
-            return this.Redirect("/");
+            return this.Redirect(HomePath);
         }
 
         public IActionResult Add()
@@ -48,7 +41,7 @@
             {
                 return this.View();
             }
-            return this.Redirect("/");
+            return this.Redirect(HomePath);
         }
 
         [HttpPost]
@@ -56,7 +49,7 @@
         {
             this.games.Add(model.Title, model.Description, model.Image, model.Price, model.Size, model.Trailer, model.ReleaseDate);
 
-            return this.Redirect("/admin/all");
+            return this.Redirect(AdminListGames);
         }
     }
 }

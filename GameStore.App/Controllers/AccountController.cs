@@ -8,6 +8,10 @@
 
     public class AccountController : BaseController
     {
+        private const string PasswordError = "Sorry password not match!";
+        private const string ExistingEmailError = "Sorry there is allready user with the same email address!";
+        private const string LoginError = "Username or password not valid!";
+
         private readonly IUserService users;
 
         public AccountController()
@@ -25,16 +29,16 @@
         {
             if (model.Password != model.ConfirmPassword)
             {
-                this.ShowError("Sorry password not match!");
+                this.ShowError(PasswordError);
                 return this.Register();
             }
             var created = this.users.Create(model.Email, model.FullName, model.Password);
             if (created)
             {
                 this.SignIn(model.Email);
-                return this.Redirect("/");
+                return this.Redirect(HomePath);
             }
-            this.ShowError("Sorry there is allready user with the same email address!");
+            this.ShowError(ExistingEmailError);
             return this.Register();
         }
 
@@ -50,16 +54,16 @@
             if (exists)
             {
                 this.SignIn(model.Email);
-                return this.Redirect(@"/");
+                return this.Redirect(HomePath);
             }
-            this.ShowError("Username or password not valid!");
+            this.ShowError(LoginError);
             return this.View();
         }
 
         public IActionResult Logout()
         {
             this.SignOut();
-            return this.Redirect("/");
+            return this.Redirect(HomePath);
         }
     }
 }

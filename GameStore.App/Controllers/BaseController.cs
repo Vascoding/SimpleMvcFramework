@@ -6,6 +6,8 @@
     using SimpleMvc.Framework.Controllers;
     public abstract class BaseController : Controller
     {
+        protected const string HomePath = "/";
+
         protected BaseController()
         {
             this.ViewModel["anonymousDisplay"] = "flex";
